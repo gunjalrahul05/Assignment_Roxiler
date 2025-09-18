@@ -10,7 +10,18 @@ class User {
         'users.name',
         'users.email',
         'users.address',
-        'roles.name as role'
+        'roles.name as role',
+        // Subquery for average rating if user is a STORE_OWNER
+        db.raw(`CASE 
+          WHEN roles.name = 'STORE_OWNER' 
+          THEN (
+            SELECT COALESCE(AVG(r.rating_value), 0)
+            FROM stores s
+            LEFT JOIN ratings r ON s.id = r.store_id
+            WHERE s.owner_id = users.id
+          )
+          ELSE NULL
+        END as ranking`)
       )
       .join('roles', 'users.role_id', 'roles.id')
       .groupBy('users.id', 'roles.name');

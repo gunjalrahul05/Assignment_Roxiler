@@ -49,10 +49,13 @@ const Dashboard = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
           <Card>
-            <CardHeader title="Store Rating" />
+            <CardHeader 
+              title="Store Rating" 
+              titleTypographyProps={{ align: 'center' }} 
+            />
             <CardContent>
               <Typography variant="h3" align="center">
-                {store.averageRating}
+                {Number(store.averageRating).toFixed(1)}
               </Typography>
               <Typography variant="body2" color="text.secondary" align="center">
                 Based on {store.totalRatings} ratings

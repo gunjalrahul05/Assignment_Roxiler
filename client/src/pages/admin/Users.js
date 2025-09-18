@@ -170,17 +170,18 @@ const Users = () => {
               <TableCell>Email</TableCell>
               <TableCell>Address</TableCell>
               <TableCell>Role</TableCell>
+              <TableCell>Rating</TableCell> {/* Add this */}
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} align="center">Loading...</TableCell>
+                <TableCell colSpan={6} align="center">Loading...</TableCell>
               </TableRow>
             ) : usersData?.data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} align="center">No users found</TableCell>
+                <TableCell colSpan={6} align="center">No users found</TableCell>
               </TableRow>
             ) : (
               usersData?.data.map((user) => (
@@ -189,6 +190,11 @@ const Users = () => {
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.address}</TableCell>
                   <TableCell>{user.role}</TableCell>
+                  <TableCell>
+                    {user.role === 'STORE_OWNER'
+                      ? (user.ranking !== null ? Number(user.ranking).toFixed(1) : '0.0')
+                      : '-'}
+                  </TableCell>
                   <TableCell>
                     <Button size="small" onClick={() => openEditDialog(user)}>Edit</Button>
                     <Button size="small" color="error" onClick={() => openDeleteDialog(user)}>Delete</Button>
