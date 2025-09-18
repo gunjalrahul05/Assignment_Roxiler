@@ -2,25 +2,14 @@ import { apiSlice } from './apiSlice';
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getUsers: builder.query({
-      query: ({ page = 1, limit = 10, filters = {} }) => {
-        let queryParams = `page=${page}&limit=${limit}`;
-        
-        // Add filters to query params if they exist
-        if (filters.name) queryParams += `&name=${filters.name}`;
-        if (filters.email) queryParams += `&email=${filters.email}`;
-        if (filters.address) queryParams += `&address=${filters.address}`;
-        if (filters.role) queryParams += `&role=${filters.role}`;
-        
-        return `/users?${queryParams}`;
+    getAllUsers: builder.query({
+      query: ({ page = 1, limit = 10, name = '', email = '', role = '' }) => {
+        let params = `?page=${page}&limit=${limit}`;
+        if (name) params += `&name=${encodeURIComponent(name)}`;
+        if (email) params += `&email=${encodeURIComponent(email)}`;
+        if (role) params += `&role=${encodeURIComponent(role)}`;
+        return `/users${params}`;
       },
-      providesTags: (result) => 
-        result
-          ? [
-              ...result.data.map(({ id }) => ({ type: 'User', id })),
-              { type: 'User', id: 'LIST' }
-            ]
-          : [{ type: 'User', id: 'LIST' }]
     }),
     getUserById: builder.query({
       query: (id) => `/users/${id}`,
@@ -56,12 +45,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useGetUsersQuery,
+  useGetAllUsersQuery,
   useGetUserByIdQuery,
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation
 } = userApiSlice;
-
-// Add this line to create an alias for backward compatibility
-export const useGetAllUsersQuery = useGetUsersQuery;

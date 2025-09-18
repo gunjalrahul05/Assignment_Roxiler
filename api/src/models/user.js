@@ -12,7 +12,8 @@ class User {
         'users.address',
         'roles.name as role'
       )
-      .join('roles', 'users.role_id', 'roles.id');
+      .join('roles', 'users.role_id', 'roles.id')
+      .groupBy('users.id', 'roles.name');
 
     if (filters.name) {
       query.where('users.name', 'ilike', `%${filters.name}%`);
@@ -28,27 +29,25 @@ class User {
     }
 
     const countQuery = db(this.tableName)
-      .count('id as count')
-      .first();
-    
+      .count('users.id as count')
+      .join('roles', 'users.role_id', 'roles.id');
+
     if (filters.name) {
-      countQuery.where('name', 'ilike', `%${filters.name}%`);
+      countQuery.where('users.name', 'ilike', `%${filters.name}%`);
     }
     if (filters.email) {
-      countQuery.where('email', 'ilike', `%${filters.email}%`);
+      countQuery.where('users.email', 'ilike', `%${filters.email}%`);
     }
     if (filters.address) {
-      countQuery.where('address', 'ilike', `%${filters.address}%`);
+      countQuery.where('users.address', 'ilike', `%${filters.address}%`);
     }
-    
     if (filters.role) {
-      countQuery.join('roles', 'users.role_id', 'roles.id')
-        .where('roles.name', filters.role);
+      countQuery.where('roles.name', filters.role);
     }
 
     const offset = (page - 1) * limit;
     const users = await query.limit(limit).offset(offset);
-    const total = await countQuery;
+    const total = await countQuery.first();
 
     return {
       data: users,
