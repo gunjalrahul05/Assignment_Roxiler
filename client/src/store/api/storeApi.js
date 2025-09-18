@@ -56,6 +56,14 @@ export const storeApiSlice = apiSlice.injectEndpoints({
       providesTags: (result, error, { id }) => [
         { type: 'Store', id: `RATERS-${id}` }
       ]
+    }),
+    getAllStores: builder.query({
+      query: ({ page = 1, limit = 8, name = '', address = '' }) => {
+        let params = `?page=${page}&limit=${limit}`;
+        if (name) params += `&name=${encodeURIComponent(name)}`;
+        if (address) params += `&address=${encodeURIComponent(address)}`;
+        return `/stores${params}`;
+      },
     })
   })
 });
@@ -66,8 +74,9 @@ export const {
   useCreateStoreMutation,
   useUpdateStoreMutation,
   useDeleteStoreMutation,
-  useGetStoreRatersQuery
+  useGetStoreRatersQuery,
+  useGetAllStoresQuery
 } = storeApiSlice;
 
 // Alias for backward compatibility
-export const useGetAllStoresQuery = useGetStoresQuery;
+// export const useGetAllStoresQuery = useGetStoresQuery;

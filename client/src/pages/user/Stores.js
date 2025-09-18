@@ -56,7 +56,7 @@ const Stores = () => {
         Browse Stores
       </Typography>
       
-      {/* Filters */}
+      {/* Filters for searching accoding to name */}
       <Box sx={{ mb: 3, display: 'flex', gap: 2 }}>
         <TextField
           label="Store Name"
