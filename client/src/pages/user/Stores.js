@@ -14,7 +14,7 @@ const Stores = () => {
     address: ''
   });
   
-  const { data: storesData, isLoading } = useGetAllStoresQuery({
+  const { data: storesData, isLoading, refetch } = useGetAllStoresQuery({
     page,
     limit: 8,
     ...filters
@@ -41,6 +41,7 @@ const Stores = () => {
         rating_value: newValue
       }).unwrap();
       toast.success('Rating submitted successfully');
+      refetch();
     } catch (error) {
       toast.error(error.data?.message || 'Failed to submit rating');
     }
